@@ -1,10 +1,10 @@
 import express from 'express';
 import path from 'path';
-import user from '../routes/user';
-import note from '../routes/note';
+import user from '../routes/user';    
+import note from '../routes/note';     
 import { connectDB } from './config/database';
 import cors from 'cors';
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';     
 
 const app = express();
 app.use(cors());
