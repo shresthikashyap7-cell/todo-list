@@ -27,6 +27,7 @@ app.use(express.json());
 
 console.log('Middleware configured');
 
+// API routes - these must come BEFORE static files
 app.use('/api/users', user);
 app.use('/api', note);
 
@@ -36,11 +37,13 @@ console.log('Routes configured');
 if (process.env.NODE_ENV === "production") {
   const frontendPath = path.join(__dirname, "../../../frontend/dist");
   console.log('Serving static files from:', frontendPath);
+  
+  // Serve static files
   app.use(express.static(frontendPath));
   
-  // Changed from "*" to catch-all that works with Express 5
-  app.get('/*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, "../../../frontend", "dist", "index.html"));
+  // Catch-all handler for client-side routing (Express 5 compatible)
+  app.use((req, res) => {
+    res.sendFile(path.join(frontendPath, "index.html"));
   });
 }
 
