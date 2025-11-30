@@ -32,9 +32,9 @@ const Home = () => {
                     ))}
                 </div>
 
-                <button className='text-white text-lg font-medium underline hover:text-blue-400 transition-colors mt-2' onClick={() => {navigate('/notes')}}>
+                {notes.length > 0  && <button className='text-white text-lg font-medium underline hover:text-blue-400 transition-colors mt-2' onClick={() => {navigate('/notes')}}>
                     View All
-                </button>
+                </button>}
 
                 <button className='flex items-center gap-2 text-white bg-blue-600 text-base sm:text-lg font-medium py-3 px-10 rounded-lg hover:bg-blue-700 transition-colors mt-4'
                     onClick={()=> navigate(`/note`)}
