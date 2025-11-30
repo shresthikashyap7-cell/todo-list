@@ -3,4 +3,5 @@ export interface Note {
     description: string;
     status: 'pending' | 'complete';
     _id?: string;
+    createdAt:string;
 }
