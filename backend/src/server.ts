@@ -6,10 +6,10 @@ import { connectDB } from './config/database';
 import cors from 'cors';
 import * as dotenv from 'dotenv';     
 
+dotenv.config();
+
 const app = express();
 app.use(cors());
-
-dotenv.config();
 app.use(express.json());
 
 app.use('/api/users', user);
@@ -25,7 +25,17 @@ if (process.env.NODE_ENV === "production") {
 
 const port = process.env.PORT || 3000;
 
-app.listen(port, async() => {
-  console.log(`Server is running on port ${port}`);
-  await connectDB();
-});
+const startServer = async () => {
+  try {
+    await connectDB();
+    app.listen(port, () => {
+      console.log(`Server is running on port ${port}`);
+      console.log(`Environment: ${process.env.NODE_ENV}`);
+    });
+  } catch (error) {
+    console.error('Failed to start server:', error);
+    process.exit(1);
+  }
+};
+
+startServer();
