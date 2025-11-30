@@ -34,11 +34,13 @@ console.log('Routes configured');
 
 // Serve frontend in production
 if (process.env.NODE_ENV === "production") {
-  const frontendPath = path.join(__dirname, "../../frontend/dist");
+  const frontendPath = path.join(__dirname, "../../../frontend/dist");
   console.log('Serving static files from:', frontendPath);
   app.use(express.static(frontendPath));
-  app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "../../frontend", "dist", "index.html"));
+  
+  // Changed from "*" to catch-all that works with Express 5
+  app.get('/*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, "../../../frontend", "dist", "index.html"));
   });
 }
 
