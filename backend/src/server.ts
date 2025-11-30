@@ -6,36 +6,62 @@ import { connectDB } from './config/database';
 import cors from 'cors';
 import * as dotenv from 'dotenv';     
 
+// Add global error handlers
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught Exception:', error);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  process.exit(1);
+});
+
+console.log('Starting application...');
 dotenv.config();
+console.log('Environment loaded');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
+console.log('Middleware configured');
+
 app.use('/api/users', user);
 app.use('/api', note);
 
+console.log('Routes configured');
+
 // Serve frontend in production
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../../frontend/dist")));
+  const frontendPath = path.join(__dirname, "../../frontend/dist");
+  console.log('Serving static files from:', frontendPath);
+  app.use(express.static(frontendPath));
   app.get("*", (req, res) => {
     res.sendFile(path.resolve(__dirname, "../../frontend", "dist", "index.html"));
   });
 }
 
 const port = process.env.PORT || 3000;
+console.log('Port:', port);
 
 const startServer = async () => {
   try {
+    console.log('Attempting to connect to database...');
     await connectDB();
+    console.log('Database connected successfully');
+    
     app.listen(port, () => {
-      console.log(`Server is running on port ${port}`);
-      console.log(`Environment: ${process.env.NODE_ENV}`);
+      console.log(`✓ Server is running on port ${port}`);
+      console.log(`✓ Environment: ${process.env.NODE_ENV}`);
+      console.log(`✓ MongoDB URI exists: ${!!process.env.MONGODB_URI}`);
     });
   } catch (error) {
     console.error('Failed to start server:', error);
+    console.error('Error details:', JSON.stringify(error, null, 2));
     process.exit(1);
   }
 };
 
+console.log('Calling startServer...');
 startServer();
